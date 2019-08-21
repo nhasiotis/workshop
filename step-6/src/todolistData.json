@@ -1,0 +1,8 @@
+{
+  "items": [
+    {"text": "shopping", "completed": false},
+    {"text": "cleaning kitchen", "completed": false},
+    {"text": "watering plants", "completed": false},
+    {"text": "building bookcase", "completed": false}
+  ]
+}
