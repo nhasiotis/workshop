@@ -1,0 +1,6 @@
+.listItem {
+  list-style: none;
+  padding: 10px;
+  margin-left: 10px;
+  border-bottom: 1px solid red;
+}
