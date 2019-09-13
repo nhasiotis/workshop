@@ -1,0 +1,8 @@
+.App {
+    text-align: flex-start;
+    padding: 0.625em;
+}
+
+.App select {
+    margin: 0.625em 0;
+}

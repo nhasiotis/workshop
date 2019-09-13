@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Given SelectView when rendering should have select component with id and empty list of options matching snapshot 1`] = `
+<select
+  data-id="testId"
+/>
+`;
+
+exports[`Given SelectView when rendering should have select component with id and list with 5 options matching snapshot 1`] = `
+<select
+  data-id="testId"
+>
+  <option
+    key="0"
+  >
+    scanner 1
+  </option>
+  <option
+    key="1"
+  >
+    scanner 2
+  </option>
+  <option
+    key="2"
+  >
+    scanner 3
+  </option>
+  <option
+    key="3"
+  >
+    scanner 4
+  </option>
+  <option
+    key="4"
+  >
+    scanner 5
+  </option>
+</select>
+`;

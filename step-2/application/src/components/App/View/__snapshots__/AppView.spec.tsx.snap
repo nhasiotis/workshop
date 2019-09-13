@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Given AppView when rendering should have AppView with alert component and list of scanners matching snapshot 1`] = `
+<div
+  className="App"
+>
+  <Alert
+    data-id="alert-msg-id"
+    message="Data is loaded successfully"
+    type="success"
+  />
+  <SelectView
+    id="scanner-select"
+    items={
+      Array [
+        "scannerA",
+        "scannerB",
+      ]
+    }
+  />
+</div>
+`;
+
+exports[`Given AppView when rendering should have AppView without alert component and empty scanner list matching snapshot 1`] = `
+<div
+  className="App"
+>
+  <SelectView
+    id="scanner-select"
+    items={Array []}
+  />
+</div>
+`;
