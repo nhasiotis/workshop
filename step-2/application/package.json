@@ -19,11 +19,7 @@
     "test-ci": "CI=true react-scripts test",
     "coverage": "react-scripts test --coverage --watchAll=false",
     "eject": "react-scripts eject",
-    "json-server": "./node_modules/.bin/json-server --watch ./src/scannerData.json",
-    "lint": "./node_modules/.bin/eslint src/**"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "json-server": "./node_modules/.bin/json-server --watch ./src/scannerData.json"
   },
   "browserslist": {
     "production": [
@@ -53,14 +49,9 @@
     "@types/react-redux": "^7.1.1",
     "@types/redux-mock-store": "^1.0.1",
     "@types/sinon": "^7.0.13",
-    "@typescript-eslint/eslint-plugin": "^1.13.0",
-    "@typescript-eslint/parser": "^1.13.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
     "enzyme-to-json": "^3.4.0",
-    "eslint": "^5.16.0",
-    "eslint-plugin-json": "^1.4.0",
-    "eslint-plugin-react": "^7.14.3",
     "fetch-mock": "^7.3.6",
     "jest-fetch-mock": "^2.1.2",
     "json-server": "^0.15.0",
