@@ -1,8 +1,10 @@
 import React from "react";
 import "./App.css";
 import ListItem from "./ListItem";
+
 import { Animal, Cat, CatClass, AnimalClass } from "./jsPrinciples/Prototypes";
 import promise from "./jsPrinciples/promises";
+import { counterResult } from "./jsPrinciples/closure";
 
 interface AppState {
   items: any;
@@ -11,8 +13,11 @@ interface AppState {
 export default class AppClass extends React.Component<{}, AppState> {
   constructor(props) {
     super(props);
-    this.fetchData = this.fetchData.bind(this);
-    // promise();
+
+    // below is for demo purposes, this type of code should not be in your constructor
+
+    promise();
+    counterResult();
     const animal = new Animal();
     const animalClass = new AnimalClass();
     const animalFood = animal.eats();
@@ -22,8 +27,10 @@ export default class AppClass extends React.Component<{}, AppState> {
     const catFoodInClass = catClass.eats();
     const cat = new Cat();
     const catFood = cat.eats();
-
+    const isReallyACatInstance = cat instanceof Cat;
     const isReallyACat = catClass instanceof CatClass;
+
+    this.fetchData = this.fetchData.bind(this);
     this.state = {
       items: []
     } as AppState;
@@ -46,16 +53,16 @@ export default class AppClass extends React.Component<{}, AppState> {
       );
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     // async call should be here
     console.log("mounted");
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount() {
     console.log("i will unmount");
   }
 
-  render() {
+  public render() {
     console.log("render");
     return (
       <div>

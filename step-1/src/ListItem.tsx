@@ -18,7 +18,7 @@ const ListItem: React.FunctionComponent<ListItemProps> = ({ item, name }) => {
 };
 
 ListItem.defaultProps = {
-  name: "lesley"
-} as Partial<ListItemProps>;
+  name: "fakeName "
+};
 
 export default ListItem;
