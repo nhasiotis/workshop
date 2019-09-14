@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { List, Typography } from "antd";
 import ClickCounter from "../ClickCounter/ClickCounter";
-import { testing } from "../../modules/Commits/Actions";
+
 import { Dispatch } from "redux";
 
 export interface AppState {
@@ -51,17 +51,12 @@ export interface GitHubData {
   created_at: string;
 }
 
-interface IAppProps {
-  testing: () => void;
-}
-
-export class App extends React.Component<IAppProps, AppState> {
+export class App extends React.Component<{}, AppState> {
   state: AppState = {
     commits: []
   };
 
   private fetchData() {
-    this.props.testing();
     return fetch("https://api.github.com/users/LesleyMerks/events")
       .then(data => {
         return data.json();
@@ -116,9 +111,7 @@ export class App extends React.Component<IAppProps, AppState> {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  testing: () => testing(dispatch)
-});
+const mapDispatchToProps = (dispatch: Dispatch) => ({});
 
 export default connect(
   null,

@@ -6,7 +6,7 @@ import { GithubCommit } from "./components/App/App";
 
 // import scannerSaga from "./state/sagas/Scanner/ScannerSaga";
 
-export interface AppState {
+export interface ApplicationState {
   commits: GithubCommit[];
 }
 
@@ -14,11 +14,14 @@ const combinedReducers = combineReducers({
   commits: commitReducer
 });
 
-const initialState: AppState = {
+const initialState: ApplicationState = {
   commits: []
 };
 
-export const rootReducer = (state: AppState = initialState, action: any) => {
+export const rootReducer = (
+  state: ApplicationState = initialState,
+  action: any
+) => {
   return combinedReducers(state, action);
 };
 
