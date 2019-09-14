@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "antd/lib/button/button";
-
+import "antd/lib/button/style/index.css";
 import "./ClickCounter.css";
 
 export interface IClickCounterState {

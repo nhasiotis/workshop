@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { List, Typography } from "antd";
+import "antd/lib/list/style/index.css";
 import ClickCounter from "../ClickCounter/ClickCounter";
 
 import { Dispatch } from "redux";
