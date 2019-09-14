@@ -18,13 +18,6 @@ const initialState: ApplicationState = {
   commits: []
 };
 
-export const rootReducer = (
-  state: ApplicationState = initialState,
-  action: any
-) => {
-  return combinedReducers(state, action);
-};
-
 const sagaMiddleware = createSagaMiddleware();
 
 let composeEnhancers: any;
@@ -36,7 +29,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 const store = createStore(
-  rootReducer,
+  combinedReducers,
   composeEnhancers(applyMiddleware(sagaMiddleware))
 );
 
