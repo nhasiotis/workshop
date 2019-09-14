@@ -1,23 +1,21 @@
 import { applyMiddleware, combineReducers, compose, createStore } from "redux";
 import createSagaMiddleware from "redux-saga";
 
-import { scannerReducer } from "./modules/Scanner/reducer";
-import { statusReducer } from "./modules/Status/StatusReducer";
+import { commitReducer } from "./modules/Commits/reducer";
+import { GithubCommit } from "./components/App/App";
+
 // import scannerSaga from "./state/sagas/Scanner/ScannerSaga";
 
 export interface AppState {
-  scanners: any;
-  status: any;
+  commits: GithubCommit[];
 }
 
 const combinedReducers = combineReducers({
-  scanners: scannerReducer,
-  status: statusReducer
+  commits: commitReducer
 });
 
 const initialState: AppState = {
-  scanners: [],
-  status: { message: "", type: "success", visible: false }
+  commits: []
 };
 
 export const rootReducer = (state: AppState = initialState, action: any) => {
