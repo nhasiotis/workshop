@@ -1,6 +1,9 @@
 import React from "react";
+import { connect } from "react-redux";
 import { List, Typography } from "antd";
 import ClickCounter from "../ClickCounter/ClickCounter";
+import { testing } from "../../modules/Commits/Actions";
+import { Dispatch } from "redux";
 
 export interface AppState {
   commits: GithubCommit[];
@@ -48,16 +51,17 @@ export interface GitHubData {
   created_at: string;
 }
 
-export class App extends React.Component<{}, AppState> {
-  constructor({}) {
-    super({});
+interface IAppProps {
+  testing: () => void;
+}
 
-    this.state = {
-      commits: []
-    };
-  }
+export class App extends React.Component<IAppProps, AppState> {
+  state: AppState = {
+    commits: []
+  };
 
   private fetchData() {
+    this.props.testing();
     return fetch("https://api.github.com/users/LesleyMerks/events")
       .then(data => {
         return data.json();
@@ -111,3 +115,12 @@ export class App extends React.Component<{}, AppState> {
     );
   }
 }
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  testing: () => testing(dispatch)
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(App);

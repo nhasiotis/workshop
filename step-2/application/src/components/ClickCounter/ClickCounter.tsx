@@ -11,13 +11,9 @@ export default class ClickCounter extends React.Component<
   {},
   IClickCounterState
 > {
-  constructor({}) {
-    super({});
-
-    this.state = {
-      clickCount: 0
-    };
-  }
+  state: IClickCounterState = {
+    clickCount: 0
+  };
 
   private incrementCount = () => {
     this.setState((prevState: IClickCounterState) => {
