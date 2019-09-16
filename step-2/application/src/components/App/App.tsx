@@ -9,7 +9,7 @@ import { Dispatch } from "redux";
 
 export interface AppState {
   commits: GithubCommit[];
-  selectedRows: string[];
+  selectedCommitIds: string[];
 }
 
 export interface GithubAuthor {
@@ -57,7 +57,7 @@ export interface GitHubData {
 export class App extends React.Component<{}, AppState> {
   state: AppState = {
     commits: [],
-    selectedRows: []
+    selectedCommitIds: []
   };
 
   private fetchData() {
@@ -95,18 +95,18 @@ export class App extends React.Component<{}, AppState> {
     );
   }
 
-  private setSelectedRow = (selectedId: string) => {
-    if (this.state.selectedRows.indexOf(selectedId) > -1) {
+  private setSelectedCommitId = (selectedId: string) => {
+    if (this.state.selectedCommitIds.indexOf(selectedId) > -1) {
       // never update state immediately, make a copy or use function that does not mutate original input directly!
 
       return this.setState({
-        selectedRows: this.state.selectedRows.filter(
+        selectedCommitIds: this.state.selectedCommitIds.filter(
           stateRow => stateRow !== selectedId
         )
       });
     }
     this.setState((prevState: AppState) => ({
-      selectedRows: [...prevState.selectedRows, selectedId]
+      selectedCommitIds: [...prevState.selectedCommitIds, selectedId]
     }));
   };
 
@@ -120,12 +120,12 @@ export class App extends React.Component<{}, AppState> {
           renderItem={item => (
             <List.Item>
               <Typography.Text
-                mark={this.state.selectedRows.indexOf(item.sha) > -1}
+                mark={this.state.selectedCommitIds.indexOf(item.sha) > -1}
               >
                 {item.message}
               </Typography.Text>
               <ClickCounter />
-              <Switch onChange={() => this.setSelectedRow(item.sha)} />
+              <Switch onChange={() => this.setSelectedCommitId(item.sha)} />
             </List.Item>
           )}
         />
