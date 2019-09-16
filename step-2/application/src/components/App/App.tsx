@@ -1,13 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
-import { List, Typography } from "antd";
+import { List, Typography, Switch } from "antd";
 import "antd/lib/list/style/index.css";
+import "antd/lib/switch/style/index.css";
 import ClickCounter from "../ClickCounter/ClickCounter";
 
 import { Dispatch } from "redux";
 
 export interface AppState {
   commits: GithubCommit[];
+  selectedRows: string[];
 }
 
 export interface GithubAuthor {
@@ -54,7 +56,8 @@ export interface GitHubData {
 
 export class App extends React.Component<{}, AppState> {
   state: AppState = {
-    commits: []
+    commits: [],
+    selectedRows: []
   };
 
   private fetchData() {
@@ -92,18 +95,37 @@ export class App extends React.Component<{}, AppState> {
     );
   }
 
+  private setSelectedRow = (selectedId: string) => {
+    if (this.state.selectedRows.indexOf(selectedId) > -1) {
+      // never update state immediately, make a copy or use function that does not mutate original input directly!
+
+      return this.setState({
+        selectedRows: this.state.selectedRows.filter(
+          stateRow => stateRow !== selectedId
+        )
+      });
+    }
+    this.setState((prevState: AppState) => ({
+      selectedRows: [...prevState.selectedRows, selectedId]
+    }));
+  };
+
   public render() {
     return (
       <div>
         <List
-          header={<div>First commit for each commit event</div>}
-          footer={<div>Data fetched from github api</div>}
+          header={<div>Commit list</div>}
           bordered
           dataSource={this.state.commits}
           renderItem={item => (
             <List.Item>
-              <Typography.Text mark>{item.message}</Typography.Text>
+              <Typography.Text
+                mark={this.state.selectedRows.indexOf(item.sha) > -1}
+              >
+                {item.message}
+              </Typography.Text>
               <ClickCounter />
+              <Switch onChange={() => this.setSelectedRow(item.sha)} />
             </List.Item>
           )}
         />
