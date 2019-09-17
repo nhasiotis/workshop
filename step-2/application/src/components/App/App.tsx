@@ -6,9 +6,10 @@ import "antd/lib/switch/style/index.css";
 import ClickCounter from "../ClickCounter/ClickCounter";
 
 import { Dispatch } from "redux";
+import { fetchData } from "../../modules/Commits/Actions";
+import { IApplicationState } from "../../store";
 
 export interface AppState {
-  commits: GithubCommit[];
   selectedCommitIds: string[];
 }
 
@@ -54,45 +55,18 @@ export interface GitHubData {
   created_at: string;
 }
 
-export class App extends React.Component<{}, AppState> {
+interface IAppProps {
+  fetchData: () => void;
+  commits: GithubCommit[];
+}
+
+export class App extends React.Component<IAppProps, AppState> {
   state: AppState = {
-    commits: [],
     selectedCommitIds: []
   };
 
-  private fetchData() {
-    return fetch("https://api.github.com/users/LesleyMerks/events")
-      .then(data => {
-        return data.json();
-      })
-      .then(
-        (data: GitHubData[]) => {
-          this.setState({
-            commits: this.filterCommitsPerEvent(data)
-          });
-        },
-        error => {
-          console.log("something went wrong");
-        }
-      );
-  }
-
   public componentDidMount() {
-    this.fetchData();
-  }
-
-  private filterCommitsPerEvent(data: GitHubData[]) {
-    return data.reduce(
-      (acc, cur) => {
-        if (cur.payload.commits && cur.payload.commits.length > 0) {
-          cur.payload.commits.forEach(commit => {
-            acc.push(commit);
-          });
-        }
-        return acc;
-      },
-      [] as GithubCommit[]
-    );
+    this.props.fetchData();
   }
 
   private setSelectedCommitId = (selectedId: string) => {
@@ -116,7 +90,7 @@ export class App extends React.Component<{}, AppState> {
         <List
           header={<div>Commit list</div>}
           bordered
-          dataSource={this.state.commits}
+          dataSource={this.props.commits}
           renderItem={item => (
             <List.Item>
               <Typography.Text
@@ -134,9 +108,15 @@ export class App extends React.Component<{}, AppState> {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({});
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  fetchData: () => fetchData(dispatch)
+});
+
+const mapStateToProps = (state: IApplicationState) => ({
+  commits: state.commits.items
+});
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(App);
