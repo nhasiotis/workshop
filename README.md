@@ -9,5 +9,5 @@
 
 If you are having diffuculties running a local node environment, use code sandbox to run your application in the browser:
 
-for step 1: https://codesandbox.io/s/github/LesleyMerks/workshop/tree/csb-1568644786320/step-1/application
-for step 2: https://codesandbox.io/s/github/LesleyMerks/workshop/tree/csb-1568644786320/step-2/application
+for step 1: https://codesandbox.io/s/github/LesleyMerks/workshop/tree/develop/step-1/application
+for step 2: https://codesandbox.io/s/github/LesleyMerks/workshop/tree/develop/step-2/application
