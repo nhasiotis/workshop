@@ -1,5 +1,5 @@
 import { GithubCommit } from "../../components/App/App";
-import { DataActions, success } from "../../modules/Commits/Actions";
+import { DataActions, success, setId } from "../../modules/Commits/Actions";
 import { GitHubData } from "../../components/App/App";
 
 const filterCommitsPerEvent = (data: GitHubData[]) => {
@@ -20,13 +20,15 @@ export interface ICcommitsState {
   items: GithubCommit[];
   isLoading: boolean;
   error: string | null;
+  selectedIds: string[];
 }
 
 export const commitReducer = (
   state: ICcommitsState = {
     items: [],
     isLoading: false,
-    error: null
+    error: null,
+    selectedIds: []
   },
   action: DataActions
 ) => {
@@ -35,8 +37,16 @@ export const commitReducer = (
       return {
         isLoading: false,
         error: null,
-        items: filterCommitsPerEvent(action.data)
+        items: filterCommitsPerEvent(action.data),
+        selectedIds: []
       };
+      case setId:
+        return {
+          isLoading: false,
+          error: null,
+          items: state.items,
+          selectedIds: action.data
+        };
     default:
       return state;
   }
