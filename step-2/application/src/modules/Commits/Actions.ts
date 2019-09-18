@@ -8,40 +8,47 @@ const fetchDataSuccess = (data: GitHubData[]) => {
   return {
     type: success,
     data
-  };
+  } as const
 };
 
-const fetchDataFailure = (error: String) => {
+const fetchDataFailure = (error: string) => {
   return {
-    type: "failure",
+    type: failure,
     error
-  };
+  } as const
 };
 
 const fetchDataLoading = () => {
   return {
-    type: "loading"
-  };
+    type: loading
+  } as const
 };
+
+const delay = (ms: number) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 export const fetchData = (dispatch: Dispatch) => {
-  // fetch actial data,
+  // fetch actual data,
   dispatch(fetchDataLoading());
-  return fetch("https://api.github.com/users/LesleyMerks/events")
-    .then(data => {
-      return data.json();
-    })
-    .then(
-      (data: GitHubData[]) => {
-        dispatch(fetchDataSuccess(data));
-      },
-      error => {
-        dispatch(fetchDataFailure(error));
-      }
-    )
-    .catch(() => {
-      console.log("network error");
-    });
+  delay(3000).then(() => {
+    return fetch("https://api.github.com/users/LesleyMerks/events")
+      .then(data => {
+        return data.json();
+      })
+      .then(
+        (data: GitHubData[]) => {
+          dispatch(fetchDataSuccess(data));
+        },
+        error => {
+          dispatch(fetchDataFailure(error));
+        }
+      )
+      .catch(() => {
+        console.log("network error");
+      });
+    }
+  )
 };
 
-export type DataActions = ReturnType<typeof fetchDataSuccess>;
+export type DataActions = ReturnType<typeof fetchDataSuccess | typeof fetchDataLoading | typeof fetchDataFailure>;

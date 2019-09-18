@@ -1,5 +1,5 @@
 import { GithubCommit } from "../../components/App/App";
-import { DataActions, success } from "../../modules/Commits/Actions";
+import { DataActions, success, loading, failure } from "../../modules/Commits/Actions";
 import { GitHubData } from "../../components/App/App";
 
 const filterCommitsPerEvent = (data: GitHubData[]) => {
@@ -37,6 +37,18 @@ export const commitReducer = (
         error: null,
         items: filterCommitsPerEvent(action.data)
       };
+    case loading:
+      return {
+        isLoading: true,
+        error: null,
+        items: []
+      };
+    case failure:
+      return {
+        isLoading: false,
+        error: action.error,
+        items: []
+      };  
     default:
       return state;
   }
