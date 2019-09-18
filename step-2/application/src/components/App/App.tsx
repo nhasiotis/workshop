@@ -1,8 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
-import { List, Typography, Switch } from "antd";
+import { List, Typography, Switch, Spin, Alert } from "antd";
 import "antd/lib/list/style/index.css";
 import "antd/lib/switch/style/index.css";
+import "antd/lib/spin/style/index.css";
+import "antd/lib/alert/style/index.css";
 import ClickCounter from "../ClickCounter/ClickCounter";
 
 import { Dispatch } from "redux";
@@ -11,6 +13,7 @@ import { IApplicationState } from "../../store";
 
 export interface AppState {
   selectedCommitIds: string[];
+  loadingText: string
 }
 
 export interface GithubAuthor {
@@ -58,16 +61,48 @@ export interface GitHubData {
 interface IAppProps {
   fetchData: () => void;
   commits: GithubCommit[];
+  error: string | null;
+  isLoading: boolean;
 }
 
 export class App extends React.Component<IAppProps, AppState> {
+  loadingTexts: string[] = [
+    "Fetching coffee...",
+    "Ensuring Everything Works Perfektly...",
+    "Attaching property handlers...",
+    "Bootstrapping bootstrap...",
+    "Mapping state to props...",
+    "Uploading cookie data...",
+    "Dropping database...",
+    "Installing new search bar...",
+    "Setting explorer as your default browser...",
+    "Prettifying CSS..."
+  ];
+
+  private getLoadingText = () => {
+    return this.loadingTexts[Math.floor(Math.random() * 10)];
+  }
+
   state: AppState = {
-    selectedCommitIds: []
+    selectedCommitIds: [],
+    loadingText: this.getLoadingText()
   };
 
   public componentDidMount() {
+    this.periodicallyChangeLoadingText();
     this.props.fetchData();
   }
+
+  private periodicallyChangeLoadingText = () => {
+    setTimeout(
+      () => {
+        this.setState(() => { return { loadingText: this.getLoadingText() } });
+        if (this.props.isLoading) {
+          this.periodicallyChangeLoadingText();
+        }
+      }, 700);
+  }
+
 
   private setSelectedCommitId = (selectedId: string) => {
     if (this.state.selectedCommitIds.indexOf(selectedId) > -1) {
@@ -86,24 +121,34 @@ export class App extends React.Component<IAppProps, AppState> {
 
   public render() {
     return (
-      <div>
-        <List
-          header={<div>Commit list</div>}
-          bordered
-          dataSource={this.props.commits}
-          renderItem={item => (
-            <List.Item>
-              <Typography.Text
-                mark={this.state.selectedCommitIds.indexOf(item.sha) > -1}
-              >
-                {item.message}
-              </Typography.Text>
-              <ClickCounter />
-              <Switch onChange={() => this.setSelectedCommitId(item.sha)} />
-            </List.Item>
-          )}
-        />
-      </div>
+
+      < div >
+        {
+          this.props.error ? <Alert
+            message="You shall not have commits"
+            description={this.props.error}
+            type="error"
+          /> : null
+        }
+        <Spin size="large" tip={this.state.loadingText} spinning={this.props.isLoading}>
+          <List
+            header={<div>Commit list</div>}
+            bordered
+            dataSource={this.props.commits}
+            renderItem={item => (
+              <List.Item>
+                <Typography.Text
+                  mark={this.state.selectedCommitIds.indexOf(item.sha) > -1}
+                >
+                  {item.message}
+                </Typography.Text>
+                <ClickCounter />
+                <Switch onChange={() => this.setSelectedCommitId(item.sha)} />
+              </List.Item>
+            )}
+          />
+        </Spin>
+      </div >
     );
   }
 }
@@ -113,7 +158,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 });
 
 const mapStateToProps = (state: IApplicationState) => ({
-  commits: state.commits.items
+  error: state.commits.error,
+  commits: state.commits.items,
+  isLoading: state.commits.isLoading
 });
 
 export default connect(

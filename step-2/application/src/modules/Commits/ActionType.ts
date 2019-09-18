@@ -1,1 +1,1 @@
-export const ActionTypes = {};
+export enum ActionTypes { };
