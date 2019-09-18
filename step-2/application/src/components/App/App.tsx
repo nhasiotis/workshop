@@ -5,6 +5,7 @@ import "antd/lib/list/style/index.css";
 import "antd/lib/switch/style/index.css";
 import "antd/lib/spin/style/index.css";
 import "antd/lib/alert/style/index.css";
+import "./App.css";
 import ClickCounter from "../ClickCounter/ClickCounter";
 
 import { Dispatch } from "redux";
@@ -122,32 +123,34 @@ export class App extends React.Component<IAppProps, AppState> {
   public render() {
     return (
 
-      < div >
-        {
-          this.props.error ? <Alert
-            message="You shall not have commits"
-            description={this.props.error}
-            type="error"
-          /> : null
-        }
-        <Spin size="large" tip={this.state.loadingText} spinning={this.props.isLoading}>
-          <List
-            header={<div>Commit list</div>}
-            bordered
-            dataSource={this.props.commits}
-            renderItem={item => (
-              <List.Item>
-                <Typography.Text
-                  mark={this.state.selectedCommitIds.indexOf(item.sha) > -1}
-                >
-                  {item.message}
-                </Typography.Text>
-                <ClickCounter />
-                <Switch onChange={() => this.setSelectedCommitId(item.sha)} />
-              </List.Item>
-            )}
-          />
-        </Spin>
+      < div className="animated-manly-border">
+        < div className="content">
+          {
+            this.props.error ? <Alert
+              message="You shall not have commits"
+              description={this.props.error}
+              type="error"
+            /> : null
+          }
+          <Spin size="large" tip={this.state.loadingText} spinning={this.props.isLoading}>
+            <List
+              header={<div>Commit list</div>}
+              bordered
+              dataSource={this.props.commits}
+              renderItem={item => (
+                <List.Item>
+                  <Typography.Text
+                    mark={this.state.selectedCommitIds.indexOf(item.sha) > -1}
+                  >
+                    {item.message}
+                  </Typography.Text>
+                  <ClickCounter />
+                  <Switch onChange={() => this.setSelectedCommitId(item.sha)} />
+                </List.Item>
+              )}
+            />
+          </Spin>
+        </div>
       </div >
     );
   }
