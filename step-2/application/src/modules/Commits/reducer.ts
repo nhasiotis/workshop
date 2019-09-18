@@ -16,6 +16,15 @@ const filterCommitsPerEvent = (data: GitHubData[]) => {
   );
 };
 
+const getSelectedCommitIds = (curState: ICcommitsState, selectedId: string) => {
+  if (curState.selectedIds.indexOf(selectedId) > -1) {
+    return curState.selectedIds.filter(stateRow => stateRow !== selectedId)
+  } else {
+    return [...curState.selectedIds, selectedId];
+  }
+}
+
+
 export interface ICcommitsState {
   items: GithubCommit[];
   isLoading: boolean;
@@ -45,7 +54,7 @@ export const commitReducer = (
           isLoading: false,
           error: null,
           items: state.items,
-          selectedIds: action.data
+          selectedIds: getSelectedCommitIds(state, action.selectedId)
         };
     default:
       return state;

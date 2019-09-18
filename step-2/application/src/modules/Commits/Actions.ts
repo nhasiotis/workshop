@@ -9,27 +9,27 @@ const fetchDataSuccess = (data: GitHubData[]) => {
   return {
     type: success,
     data
-  };
+  } as const
 };
 
 const fetchDataFailure = (error: String) => {
   return {
     type: "failure",
     error
-  };
+  } as const
 };
 
 const fetchDataLoading = () => {
   return {
     type: "loading"
-  };
+  } as const
 };
 
 const setSelectedId = (id: string) => {
   return {
     type: setId,
-    id
-  };
+    selectedId: id
+  } as const
 };
 
 export const fetchData = (dispatch: Dispatch) => {
@@ -56,4 +56,4 @@ export const fetchData = (dispatch: Dispatch) => {
      dispatch(setSelectedId(selectedId));
    };
 
-export type DataActions = ReturnType<typeof fetchDataSuccess>;
+export type DataActions = ReturnType<typeof fetchDataSuccess | typeof setSelectedId> ;
