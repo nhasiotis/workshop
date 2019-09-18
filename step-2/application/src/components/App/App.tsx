@@ -1,8 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
-import { List, Typography, Switch } from "antd";
+import { List, Typography, Switch, Spin, Alert } from "antd";
 import "antd/lib/list/style/index.css";
 import "antd/lib/switch/style/index.css";
+import "antd/lib/spin/style/index.css";
+import "antd/lib/alert/style/index.css";
+
+import "./App.css"
 import ClickCounter from "../ClickCounter/ClickCounter";
 
 import { Dispatch } from "redux";
@@ -58,11 +62,13 @@ export interface GitHubData {
 interface IAppProps {
   fetchData: () => void;
   commits: GithubCommit[];
+  isLoading: boolean;
+  error: string | null;
 }
 
 export class App extends React.Component<IAppProps, AppState> {
   state: AppState = {
-    selectedCommitIds: []
+    selectedCommitIds: [] 
   };
 
   public componentDidMount() {
@@ -85,26 +91,30 @@ export class App extends React.Component<IAppProps, AppState> {
   };
 
   public render() {
-    return (
-      <div>
-        <List
-          header={<div>Commit list</div>}
-          bordered
-          dataSource={this.props.commits}
-          renderItem={item => (
-            <List.Item>
-              <Typography.Text
-                mark={this.state.selectedCommitIds.indexOf(item.sha) > -1}
-              >
-                {item.message}
-              </Typography.Text>
-              <ClickCounter />
-              <Switch onChange={() => this.setSelectedCommitId(item.sha)} />
-            </List.Item>
-          )}
-        />
-      </div>
-    );
+      let itemList =  ( 
+      <List
+      header={<div>Commit list</div>}
+      bordered
+      dataSource={this.props.commits}
+      renderItem={item => (
+        <List.Item>
+          <Typography.Text
+            mark={this.state.selectedCommitIds.indexOf(item.sha) > -1}
+          >
+            {item.message}
+          </Typography.Text>
+          <ClickCounter />
+          <Switch onChange={() => this.setSelectedCommitId(item.sha)} />
+        </List.Item>
+      )}
+      /> );
+      return (
+          <div>
+           {  this.props.isLoading ? <Spin className="loadingSpin" tip="Loading..." size="large">{itemList}</Spin> : 
+             (this.props.error ? <Alert message={'Error fetching data...' + this.props.error} type="error"/> : itemList)
+           }
+        </div>
+      );
   }
 }
 
@@ -113,7 +123,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 });
 
 const mapStateToProps = (state: IApplicationState) => ({
-  commits: state.commits.items
+  commits: state.commits.items,
+  isLoading: state.commits.isLoading,
+  error: state.commits.error
 });
 
 export default connect(

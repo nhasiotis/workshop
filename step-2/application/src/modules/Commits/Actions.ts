@@ -1,5 +1,6 @@
 import { Dispatch } from "redux";
 import { GitHubData } from "../../components/App/App";
+import { string } from "prop-types";
 export const loading = "FetchData_Loading";
 export const success = "FetchData_Success";
 export const failure = "FetchData_Failure";
@@ -13,14 +14,14 @@ const fetchDataSuccess = (data: GitHubData[]) => {
 
 const fetchDataFailure = (error: String) => {
   return {
-    type: "failure",
+    type: failure,
     error
   };
 };
 
 const fetchDataLoading = () => {
   return {
-    type: "loading"
+    type: loading
   };
 };
 
@@ -44,4 +45,8 @@ export const fetchData = (dispatch: Dispatch) => {
     });
 };
 
-export type DataActions = ReturnType<typeof fetchDataSuccess>;
+export interface DataActions {
+  type: string;
+  data: GitHubData[];
+  error: string;
+}
