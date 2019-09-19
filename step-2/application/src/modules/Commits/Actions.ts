@@ -1,9 +1,10 @@
-import { Dispatch } from "redux";
-import { GitHubData } from "../../components/App/App";
+import { Dispatch } from 'redux';
+
+import { GitHubData } from '../../components/App/App';
 
 export const loading = "FetchData_Loading";
 export const success = "FetchData_Success";
-export const failure = "FetchData_Failure";
+export const failure = "failure";
 export const select = "Select";
 
 const fetchDataSuccess = (data: GitHubData[], cid: string[]) => {
@@ -16,8 +17,8 @@ const fetchDataSuccess = (data: GitHubData[], cid: string[]) => {
 
 const fetchDataFailure = (error: String) => {
   return {
-    type: "failure",
-    error
+    type: failure,
+    message:  "Something went wrong! Error: " + error
   };
 };
 
@@ -26,7 +27,6 @@ const fetchDataLoading = () => {
     type: "loading"
   };
 };
-
 
 const setCommitIds = (cid: string) => {
   return {
@@ -40,18 +40,22 @@ export const fetchData = (dispatch: Dispatch) => {
   dispatch(fetchDataLoading());
   return fetch("https://api.github.com/users/LesleyMerks/events")
     .then(data => {
+      if(!data.ok){
+        throw data.statusText;
+      }
       return data.json();
     })
     .then(
-      (data: GitHubData[]) => {
-        dispatch(fetchDataSuccess(data, data.flatMap(abc => abc.payload.commits).filter(a => a != undefined).flatMap(ab => ab.sha)));
+      (payload: GitHubData[]) => {
+       dispatch(fetchDataSuccess(payload, payload.flatMap(abc => abc.payload.commits).filter(a => a != undefined).flatMap(ab => ab.sha)));
       },
-      error => {
+      (error ) => {
         dispatch(fetchDataFailure(error));
       }
     )
-    .catch(() => {
+    .catch((error) => {
       console.log("network error");
+      dispatch(fetchDataFailure(error))
     });
 };
 
@@ -61,5 +65,6 @@ export const setSelectedCommitId = (dispatch: Dispatch, id: string) =>{
 
 
 export type DataActions = ReturnType<typeof fetchDataSuccess>;
+export type ErrorAction = ReturnType<typeof fetchDataFailure>;
 export type OtherActions = ReturnType<typeof setCommitIds>;
 

@@ -1,10 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
-import { List, Typography, Switch } from "antd";
+import { List, Typography, Switch, Spin } from "antd";
 import "antd/lib/list/style/index.css";
 import "antd/lib/switch/style/index.css";
+import 'antd/dist/antd.css';
 import ClickCounter from "../ClickCounter/ClickCounter";
-
+import './animation.css'
 import { Dispatch } from "redux";
 import { fetchData, setSelectedCommitId } from "../../modules/Commits/Actions";
 import { IApplicationState } from "../../store";
@@ -58,9 +59,8 @@ interface IAppProps {
   setSelectedCommitId: (a:string) => void;
   commits: GithubCommit[];
   selectedIds: string[];
-}
-
-  
+  errors: String | null;
+}  
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   fetchData: () => fetchData(dispatch),
   setSelectedCommitId: (id: string) => setSelectedCommitId(dispatch, id)
@@ -68,28 +68,34 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 
 const mapStateToProps = (state: IApplicationState) => ({
   commits: state.commits.items,
-  selectedIds: state.commits.selectedIds
+  selectedIds: state.commits.selectedIds,
+  errors:  state.commits.error
 });
+
+const sleep = (ms: number) => {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
 
 export class App extends React.Component<IAppProps, AppState> {
   state: AppState = {   
   };
 
   public componentDidMount() {
-    this.props.fetchData();
+    sleep(10000).then(() => { this.props.fetchData();})
   }
-
 
   public render() {
     return (
       <div>
-        <List
-          header={<div>ShowCommit list</div>}
+       {this.props.errors && <div className="animation">{this.props.errors}</div>}
+       {this.props.commits.length == 0 && <div className="spin"><Spin tip="Loading.."  className="spin"/></div>}
+       <List
+          header={<div>Show Commit list</div>}
           bordered
           dataSource={this.props.commits}
           renderItem={item => (
             <List.Item>
-              <Typography.Text
+              <Typography.Text className="transition"
                 mark={this.props.selectedIds.indexOf(item.sha) > -1}
               >
                 {item.message}
@@ -103,8 +109,6 @@ export class App extends React.Component<IAppProps, AppState> {
     );
   }
 }
-
-
 
 export default connect(
   mapStateToProps,

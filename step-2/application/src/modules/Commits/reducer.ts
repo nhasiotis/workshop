@@ -1,5 +1,5 @@
 import { GithubCommit } from "../../components/App/App";
-import { DataActions, success, OtherActions ,select} from "../../modules/Commits/Actions";
+import { DataActions, success, OtherActions ,select, failure, ErrorAction} from "../../modules/Commits/Actions";
 import { GitHubData } from "../../components/App/App";
 
 const filterCommitsPerEvent = (data: GitHubData[]) => {
@@ -41,7 +41,7 @@ export const commitReducer = (
     error: null,
     selectedIds: []
   },
-  action: DataActions | OtherActions
+  action: DataActions | OtherActions | ErrorAction
 ) => {
   switch (action.type) {
     case success:
@@ -58,7 +58,13 @@ export const commitReducer = (
           items: state.items,
           selectedIds: selectIds((action as OtherActions).cid, state)
           };
-        
+      case  failure:
+        return {
+          isLoading: state.isLoading,
+          error: (action as ErrorAction).message,
+          items: state.items,
+          selectedIds: state.selectedIds
+          };
     default:
       return state;
   }
