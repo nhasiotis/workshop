@@ -3,6 +3,7 @@ import { GitHubData } from "../../components/App/App";
 export const loading = "FetchData_Loading";
 export const success = "FetchData_Success";
 export const failure = "FetchData_Failure";
+export const selectCommitId = "SelectCommitId";
 
 const fetchDataSuccess = (data: GitHubData[]) => {
   return {
@@ -21,6 +22,13 @@ const fetchDataFailure = (error: String) => {
 const fetchDataLoading = () => {
   return {
     type: "loading"
+  };
+};
+
+const setSelectedCommitIdAction = (commitId: string) => {
+  return {
+    type: selectCommitId,
+    commitId
   };
 };
 
@@ -44,4 +52,12 @@ export const fetchData = (dispatch: Dispatch) => {
     });
 };
 
-export type DataActions = ReturnType<typeof fetchDataSuccess>;
+export const setSelectedCommitId = (dispatch: Dispatch, selectedId: string) => {
+  dispatch(setSelectedCommitIdAction(selectedId));
+}
+
+export interface DataActions {
+    type: string;
+    data: GitHubData[];
+    commitId: string;
+}
