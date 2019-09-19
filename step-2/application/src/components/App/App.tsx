@@ -6,12 +6,10 @@ import "antd/lib/switch/style/index.css";
 import ClickCounter from "../ClickCounter/ClickCounter";
 
 import { Dispatch } from "redux";
-import { fetchData } from "../../modules/Commits/Actions";
+import { fetchData, setSelectedCommitId } from "../../modules/Commits/Actions";
 import { IApplicationState } from "../../store";
 
-export interface AppState {
-  selectedCommitIds: string[];
-}
+export interface AppState {}
 
 export interface GithubAuthor {
   email: string;
@@ -57,49 +55,47 @@ export interface GitHubData {
 
 interface IAppProps {
   fetchData: () => void;
+  setSelectedCommitId: (a:string) => void;
   commits: GithubCommit[];
+  selectedIds: string[];
 }
 
+  
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  fetchData: () => fetchData(dispatch),
+  setSelectedCommitId: (id: string) => setSelectedCommitId(dispatch, id)
+ });
+
+const mapStateToProps = (state: IApplicationState) => ({
+  commits: state.commits.items,
+  selectedIds: state.commits.selectedIds
+});
+
 export class App extends React.Component<IAppProps, AppState> {
-  state: AppState = {
-    selectedCommitIds: []
+  state: AppState = {   
   };
 
   public componentDidMount() {
     this.props.fetchData();
   }
 
-  private setSelectedCommitId = (selectedId: string) => {
-    if (this.state.selectedCommitIds.indexOf(selectedId) > -1) {
-      // never update state immediately, make a copy or use function that does not mutate original input directly!
-
-      return this.setState({
-        selectedCommitIds: this.state.selectedCommitIds.filter(
-          stateRow => stateRow !== selectedId
-        )
-      });
-    }
-    this.setState((prevState: AppState) => ({
-      selectedCommitIds: [...prevState.selectedCommitIds, selectedId]
-    }));
-  };
 
   public render() {
     return (
       <div>
         <List
-          header={<div>Commit list</div>}
+          header={<div>ShowCommit list</div>}
           bordered
           dataSource={this.props.commits}
           renderItem={item => (
             <List.Item>
               <Typography.Text
-                mark={this.state.selectedCommitIds.indexOf(item.sha) > -1}
+                mark={this.props.selectedIds.indexOf(item.sha) > -1}
               >
                 {item.message}
               </Typography.Text>
               <ClickCounter />
-              <Switch onChange={() => this.setSelectedCommitId(item.sha)} />
+              <Switch onChange={() => this.props.setSelectedCommitId( item.sha)} />
             </List.Item>
           )}
         />
@@ -108,13 +104,7 @@ export class App extends React.Component<IAppProps, AppState> {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  fetchData: () => fetchData(dispatch)
-});
 
-const mapStateToProps = (state: IApplicationState) => ({
-  commits: state.commits.items
-});
 
 export default connect(
   mapStateToProps,

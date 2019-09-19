@@ -1,13 +1,16 @@
 import { Dispatch } from "redux";
 import { GitHubData } from "../../components/App/App";
+
 export const loading = "FetchData_Loading";
 export const success = "FetchData_Success";
 export const failure = "FetchData_Failure";
+export const select = "Select";
 
-const fetchDataSuccess = (data: GitHubData[]) => {
+const fetchDataSuccess = (data: GitHubData[], cid: string[]) => {
   return {
     type: success,
-    data
+    data,
+    cid
   };
 };
 
@@ -24,6 +27,14 @@ const fetchDataLoading = () => {
   };
 };
 
+
+const setCommitIds = (cid: string) => {
+  return {
+    type: select,
+    cid
+  }
+}
+
 export const fetchData = (dispatch: Dispatch) => {
   // fetch actial data,
   dispatch(fetchDataLoading());
@@ -33,7 +44,7 @@ export const fetchData = (dispatch: Dispatch) => {
     })
     .then(
       (data: GitHubData[]) => {
-        dispatch(fetchDataSuccess(data));
+        dispatch(fetchDataSuccess(data, data.flatMap(abc => abc.payload.commits).filter(a => a != undefined).flatMap(ab => ab.sha)));
       },
       error => {
         dispatch(fetchDataFailure(error));
@@ -44,4 +55,11 @@ export const fetchData = (dispatch: Dispatch) => {
     });
 };
 
+export const setSelectedCommitId = (dispatch: Dispatch, id: string) =>{
+  dispatch(setCommitIds(id));
+}
+
+
 export type DataActions = ReturnType<typeof fetchDataSuccess>;
+export type OtherActions = ReturnType<typeof setCommitIds>;
+

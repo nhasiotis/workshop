@@ -6,7 +6,7 @@ import { commitReducer, ICcommitsState } from "./modules/Commits/reducer";
 // import scannerSaga from "./state/sagas/Scanner/ScannerSaga";
 
 export interface IApplicationState {
-  commits: ICcommitsState;
+  commits: ICcommitsState
 }
 
 const combinedReducers = combineReducers({
