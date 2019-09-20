@@ -1,5 +1,6 @@
 import { Dispatch } from "redux";
 import { GitHubData } from "../../components/App/App";
+
 export const loading = "FetchData_Loading";
 export const success = "FetchData_Success";
 export const failure = "FetchData_Failure";
@@ -9,31 +10,31 @@ const fetchDataSuccess = (data: GitHubData[]) => {
   return {
     type: success,
     data
-  } as const
+  } as const;
 };
 
-const fetchDataFailure = (error: String) => {
+const fetchDataFailure = (error: string) => {
   return {
-    type: "failure",
+    type: failure,
     error
-  } as const
+  } as const;
 };
 
 const fetchDataLoading = () => {
   return {
-    type: "loading"
-  } as const
+    type: loading
+  } as const;
 };
 
 const setSelectedId = (id: string) => {
   return {
     type: setId,
     selectedId: id
-  } as const
+  } as const;
 };
 
 export const fetchData = (dispatch: Dispatch) => {
-  // fetch actial data,
+  // fetch actual data,
   dispatch(fetchDataLoading());
   return fetch("https://api.github.com/users/LesleyMerks/events")
     .then(data => {
@@ -52,8 +53,13 @@ export const fetchData = (dispatch: Dispatch) => {
     });
 };
 
- export const setSelectedCommitId = (dispatch: Dispatch, selectedId: string) => {
-     dispatch(setSelectedId(selectedId));
-   };
+export const setSelectedCommitId = (dispatch: Dispatch, selectedId: string) => {
+  dispatch(setSelectedId(selectedId));
+};
 
-export type DataActions = ReturnType<typeof fetchDataSuccess | typeof setSelectedId> ;
+export type DataActions = ReturnType<
+  | typeof fetchDataSuccess
+  | typeof setSelectedId
+  | typeof fetchDataFailure
+  | typeof fetchDataLoading
+>;
