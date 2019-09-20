@@ -48,7 +48,8 @@ export const fetchData = (dispatch: Dispatch) => {
         dispatch(fetchDataFailure(error));
       }
     )
-    .catch(() => {
+    .catch(error => {
+      dispatch(fetchDataFailure(error));
       console.log("network error");
     });
 };
