@@ -10,7 +10,10 @@ import "./App.css";
 import ClickCounter from "../ClickCounter/ClickCounter";
 
 import { Dispatch } from "redux";
-import { fetchData, setSelectedCommitId } from "../../modules/Commits/Actions";
+import {
+  setSelectedCommitId,
+  fetchDataLoading
+} from "../../modules/Commits/Actions";
 import { IApplicationState } from "../../store";
 
 export interface AppState {
@@ -109,7 +112,7 @@ export class App extends React.Component<IAppProps, AppState> {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  fetchData: () => fetchData(dispatch),
+  fetchData: () => dispatch(fetchDataLoading()),
   selectCommitId: (commitId: string) => setSelectedCommitId(dispatch, commitId)
 });
 
